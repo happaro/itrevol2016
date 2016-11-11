@@ -8,12 +8,9 @@ using UnityEngine.UI;
 
 namespace OpenCVForUnitySample
 {
-		/// <summary>
-		/// Multi object tracking based on color sample.
-		/// referring to the https://www.youtube.com/watch?v=hQ-bpfdWQh8.
-		/// </summary>
-		public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
-		{
+	public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
+	{
+		public bool isRed, isGreen, isBlue, isYellow;
 				//public ColorObject template;
 	
 				/// <summary>
@@ -74,30 +71,16 @@ namespace OpenCVForUnitySample
 				/// <summary>
 				/// minimum and maximum object area
 				/// </summary>
-				const int MIN_OBJECT_AREA = 70 * 70;
-
-				/// <summary>
-				/// max object area
-				/// </summary>
+				const int MIN_OBJECT_AREA = 100 * 100;
 				int MAX_OBJECT_AREA;
-
-				/// <summary>
-				/// The threshold mat.
-				/// </summary>
 				Mat thresholdMat;
-
-				/// <summary>
-				/// The hsv mat.
-				/// </summary>
 				Mat hsvMat;
 
 
 				// Use this for initialization
 				void Start ()
 				{
-						
 						StartCoroutine (init ());
-
 				}
 
 				private IEnumerator init ()
@@ -136,58 +119,55 @@ namespace OpenCVForUnitySample
 						}
 			
 						Debug.Log ("width " + webCamTexture.width + " height " + webCamTexture.height + " fps " + webCamTexture.requestedFPS);
-			
-			
-			
-						// Starts the camera
-						webCamTexture.Play ();
 
-			Debug.LogWarning ("Play");
-
-
-						while (true) {
-								//If you want to use webcamTexture.width and webcamTexture.height on iOS, you have to wait until webcamTexture.didUpdateThisFrame == 1, otherwise these two values will be equal to 16. (http://forum.unity3d.com/threads/webcamtexture-and-error-0x0502.123922/)
-								#if UNITY_IOS && !UNITY_EDITOR
-				                if (webCamTexture.width > 16 && webCamTexture.height > 16) {
-								#else
-								if (webCamTexture.didUpdateThisFrame) {
-										#if UNITY_IOS && !UNITY_EDITOR 
-										while (webCamTexture.width <= 16) {
-												webCamTexture.GetPixels32 ();
-												yield return new WaitForEndOfFrame ();
-										} 
-										#endif
-										#endif
-
-										Debug.Log ("width " + webCamTexture.width + " height " + webCamTexture.height + " fps " + webCamTexture.requestedFPS);
-										Debug.Log ("videoRotationAngle " + webCamTexture.videoRotationAngle + " videoVerticallyMirrored " + webCamTexture.videoVerticallyMirrored + " isFrongFacing " + webCamDevice.isFrontFacing);
-					
-										colors = new Color32[webCamTexture.width * webCamTexture.height];
-										rgbMat = new Mat (webCamTexture.height, webCamTexture.width, CvType.CV_8UC3);
-										texture = new Texture2D (webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
-
-
-										thresholdMat = new Mat ();
-										hsvMat = new Mat ();
-
-										MAX_OBJECT_AREA = (int)(webCamTexture.height * webCamTexture.width / 1.5);
 						
-										gameObject.GetComponent<Renderer> ().material.mainTexture = texture;
-										//cube.GetComponent<Renderer> ().material.mainTexture = texture;
-					Debug.LogWarning(gameObject.GetComponent<Renderer> ().material != null);
-					Debug.LogWarning(texture.height + " and " + texture.width);
+			webCamTexture.Play ();
+		
+						
+		while (true) {
+							
+			//If you want to use webcamTexture.width and webcamTexture.height on iOS, you have to wait until webcamTexture.didUpdateThisFrame == 1, otherwise these two values will be equal to 16. (http://forum.unity3d.com/threads/webcamtexture-and-error-0x0502.123922/)
+							#if UNITY_IOS && !UNITY_EDITOR
+			                if (webCamTexture.width > 16 && webCamTexture.height > 16) {
+							#else
+							if (webCamTexture.didUpdateThisFrame) {
+									#if UNITY_IOS && !UNITY_EDITOR 
+									while (webCamTexture.width <= 16) {
+											webCamTexture.GetPixels32 ();
+											yield return new WaitForEndOfFrame ();
+									} 
+									#endif
+									#endif
 
-										updateLayout ();
+									Debug.Log ("width " + webCamTexture.width + " height " + webCamTexture.height + " fps " + webCamTexture.requestedFPS);
+									Debug.Log ("videoRotationAngle " + webCamTexture.videoRotationAngle + " videoVerticallyMirrored " + webCamTexture.videoVerticallyMirrored + " isFrongFacing " + webCamDevice.isFrontFacing);
+				
+									colors = new Color32[webCamTexture.width * webCamTexture.height];
+									rgbMat = new Mat (webCamTexture.height, webCamTexture.width, CvType.CV_8UC3);
+									texture = new Texture2D (webCamTexture.width, webCamTexture.height, TextureFormat.RGBA32, false);
 
-										screenOrientation = Screen.orientation;
-										initDone = true;
-					Debug.LogWarning ("Init done");
-										break;
-								} else {
-										yield return 0;
-								}
-						}
-				}
+
+									thresholdMat = new Mat ();
+									hsvMat = new Mat ();
+
+									MAX_OBJECT_AREA = (int)(webCamTexture.height * webCamTexture.width / 1.5);
+					
+									gameObject.GetComponent<Renderer> ().material.mainTexture = texture;
+									//cube.GetComponent<Renderer> ().material.mainTexture = texture;
+				Debug.LogWarning(gameObject.GetComponent<Renderer> ().material != null);
+				Debug.LogWarning(texture.height + " and " + texture.width);
+
+									updateLayout ();
+
+									screenOrientation = Screen.orientation;
+									initDone = true;
+				Debug.LogWarning ("Init done");
+									break;
+							} else {
+									yield return 0;
+							}
+					}
+			}
 		//public GameObject cube;
 				private void updateLayout ()
 				{
@@ -220,7 +200,7 @@ namespace OpenCVForUnitySample
 
 
 				// Update is called once per frame
-				void FixedUpdate ()
+				void Update ()
 				{
 					if (Input.GetKeyDown (KeyCode.Space) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
 						initDone = !initDone;
@@ -263,45 +243,49 @@ namespace OpenCVForUnitySample
 								
 
 
-								//create some temp fruit objects so that
-								//we can use their member functions/information
-								//ColorObject blue = new ColorObject ("blue");
-								ColorObject yellow = new ColorObject ("yellow");
-								ColorObject red = new ColorObject ("red");
-								//ColorObject green = new ColorObject ("green");
-						
-								//first find blue objects
-								/*Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
-								Core.inRange (hsvMat, blue.getHSVmin (), blue.getHSVmax (), thresholdMat);
-								morphOps (thresholdMat);
-								trackFilteredObject (blue, thresholdMat, hsvMat, rgbMat);*/
-								
+				if (isYellow)
+				{
+					ColorObject yellow = new ColorObject ("yellow");
 
-								//then yellows
-								Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
-								Core.inRange (hsvMat, yellow.getHSVmin (), yellow.getHSVmax (), thresholdMat);
-								morphOps (thresholdMat);
-								trackFilteredObject (yellow, thresholdMat, hsvMat, rgbMat);
-
-
-								//then reds
-								Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
-								Core.inRange (hsvMat, red.getHSVmin (), red.getHSVmax (), thresholdMat);
-								morphOps (thresholdMat);
-								trackFilteredObject (red, thresholdMat, hsvMat, rgbMat);
-								
-								//then greens
-								/*Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
-								Core.inRange (hsvMat, green.getHSVmin (), green.getHSVmax (), thresholdMat);
-								morphOps (thresholdMat);
-								trackFilteredObject (green, thresholdMat, hsvMat, rgbMat);*/
-
-
-		
-								Utils.matToTexture2D (rgbMat, texture, colors);
-						}
-
+					Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
+					Core.inRange (hsvMat, yellow.getHSVmin (), yellow.getHSVmax (), thresholdMat);
+					morphOps (thresholdMat);
+					trackFilteredObject (yellow, thresholdMat, hsvMat, rgbMat);
 				}
+					
+				if (isRed)				
+				{
+					ColorObject red = new ColorObject ("red");
+
+					Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
+					Core.inRange (hsvMat, red.getHSVmin (), red.getHSVmax (), thresholdMat);
+					morphOps (thresholdMat);
+					trackFilteredObject (red, thresholdMat, hsvMat, rgbMat);
+				}
+
+				if (isGreen)
+				{
+					
+					ColorObject green = new ColorObject ("green");
+
+					Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
+					Core.inRange (hsvMat, green.getHSVmin (), green.getHSVmax (), thresholdMat);
+					morphOps (thresholdMat);
+					trackFilteredObject (green, thresholdMat, hsvMat, rgbMat);
+				}
+						
+				if (isBlue)
+				{
+					ColorObject blue = new ColorObject ("blue");
+					Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
+					Core.inRange (hsvMat, blue.getHSVmin (), blue.getHSVmax (), thresholdMat);
+					morphOps (thresholdMat);
+					trackFilteredObject (blue, thresholdMat, hsvMat, rgbMat);
+				}
+				Utils.matToTexture2D (rgbMat, texture, colors);
+						
+			}		
+		}
 	
 				void OnDisable ()
 				{
@@ -332,7 +316,7 @@ namespace OpenCVForUnitySample
 			txt.text = theColorObjects.Count.ToString ();
 			//Debug.LogWarning (theColorObjects.Count);
 						for (int i = 0; i < theColorObjects.Count; i++) {
-				Imgproc.drawContours (frame, contours, i, theColorObjects [i].getColor (), 3, 4, hierarchy, int.MaxValue, new OpenCVForUnity.Point ());
+				Imgproc.drawContours (frame, contours, i, theColorObjects [i].getColor (), 3, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point ());
 				//Core.circle (frame, new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos ()), 5, theColorObjects [i].getColor ());
 				Core.putText (frame, theColorObjects [i].getXPos () + " , " + theColorObjects [i].getYPos (), new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos () + 20), 1, 1, theColorObjects [i].getColor (), 2);
 				Core.putText (frame, theColorObjects [i].getType (), new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos () - 20), 1, 2, theColorObjects [i].getColor (), 2);

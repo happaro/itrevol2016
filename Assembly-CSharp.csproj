@@ -45,7 +45,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\OpenCVForUnity\Samples\DrawingSample\DrawingSample.cs" />
      <Compile Include="Assets\OpenCVForUnity\Samples\MultiObjectTrackingBasedOnColorSample\ColorObject.cs" />
      <Compile Include="Assets\OpenCVForUnity\Samples\MultiObjectTrackingBasedOnColorSample\MultiObjectTrackingBasedOnColorSample.cs" />
      <Compile Include="Assets\OpenCVForUnity\org\opencv\DisposableObject.cs" />
