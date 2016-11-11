@@ -6,146 +6,75 @@ using OpenCVForUnity;
 public class ColorObject
 {
 
-		int xPos, yPos;
-		string type;
-		Scalar HSVmin, HSVmax;
-		Scalar Color;
+    public int XPos { get; set; }
+    public int YPos { get; set; }
+    public string ColorName { get; set; }
+    public Scalar HSVmin { get; set; }
+    public Scalar HSVmax { get; set; }
+    public Scalar Color { get; set; }
 
-		public ColorObject ()
-		{
-				//set values for default constructor
-				setType ("Object");
-				setColor (new Scalar (0, 0, 0));
-		
-		}
+    public ColorObject()
+    {
+        //set values for default constructor
+        ColorName = "Object";
+        Color = new Scalar(0, 0, 0);
 
-		public ColorObject (string name)
-		{
-		
-				setType (name);
-		
-				if (name == "blue") {
-			
-						//TODO: use "calibration mode" to find HSV min
-						//and HSV max values
-			
-						setHSVmin (new Scalar (92, 0, 0));
-						setHSVmax (new Scalar (124, 256, 256));
-			
-						//BGR value for Green:
-						setColor (new Scalar (0, 0, 255));
-			
-				}
-				if (name == "green") {
-			
-						//TODO: use "calibration mode" to find HSV min
-						//and HSV max values
-			
-						setHSVmin (new Scalar (34, 50, 50));
-						setHSVmax (new Scalar (80, 220, 200));
-			
-						//BGR value for Yellow:
-						setColor (new Scalar (0, 255, 0));
-			
-				}
-				if (name == "yellow") {
-			
-						//TODO: use "calibration mode" to find HSV min
-						//and HSV max values
-			
-						setHSVmin (new Scalar (20, 100, 60));
-						setHSVmax (new Scalar (40, 256, 256));
-			
-						//BGR value for Red:
-						setColor (new Scalar (255, 255, 0));
-			
-				}
-				if (name == "red") {
-			
-						//TODO: use "calibration mode" to find HSV min
-						//and HSV max values
-			
-						setHSVmin (new Scalar (0, 200, 0));
-						setHSVmax (new Scalar (19, 255, 255));
-			
-						//BGR value for Red:
-						setColor (new Scalar (255, 0, 0));
-			
-				}
-		}
-	
-		public int getXPos ()
-		{
-		
-				return xPos;
-		
-		}
-	
-		public void setXPos (int x)
-		{
-		
-				xPos = x;
-		
-		}
-	
-		public int getYPos ()
-		{
-		
-				return yPos;
-		
-		}
-	
-		public void setYPos (int y)
-		{
-		
-				yPos = y;
-		
-		}
-	
-		public Scalar getHSVmin ()
-		{
-		
-				return HSVmin;
-		
-		}
+    }
 
-		public Scalar getHSVmax ()
-		{
-		
-				return HSVmax;
-		}
-	
-		public void setHSVmin (Scalar min)
-		{
-		
-				HSVmin = min;
-		}
-	
-		public void setHSVmax (Scalar max)
-		{
-		
-				HSVmax = max;
-		}
+    public ColorObject(string name)
+    {
 
-		public string getType ()
-		{
-				return type;
-		}
+        ColorName = name;
 
-		public void setType (string t)
-		{
-				type = t;
-		}
+        if (name == "blue")
+        {
 
-		public Scalar getColor ()
-		{ 
-				return Color; 
-		}
+            //TODO: use "calibration mode" to find HSV min
+            //and HSV max values
 
-		public void setColor (Scalar c)
-		{ 
-			
-				Color = c; 
-		} 
+            HSVmin = new Scalar(180f / 2, 0.15 * 256, 0.1 * 256);
+            HSVmax = new Scalar(255f / 2, 256, 256);
 
+            //BGR value for Green:
+            Color = new Scalar(0, 0, 255);
+
+        }
+        if (name == "green")
+        {
+
+            //TODO: use "calibration mode" to find HSV min
+            //and HSV max values
+
+            HSVmin = new Scalar(64f / 2, 0.15 * 256, 0.15 * 256);
+            HSVmax = new Scalar(150f / 2, 256, 256);
+
+            //BGR value for Yellow:
+            Color = new Scalar(0, 255, 0);
+
+        }
+        if (name == "yellow")
+        {
+
+            //TODO: use "calibration mode" to find HSV min
+            //and HSV max values
+            Debug.Log("yellow");
+            HSVmin = new Scalar(15f / 2, 0.15 * 256, 0.75 * 256);
+            HSVmax = new Scalar(64f / 2, 256, 256);
+
+            //BGR value for Red:
+            Color = new Scalar(255, 255, 0);
+
+        }
+        if (name == "red")
+        {
+
+            //TODO: use "calibration mode" to find HSV min
+            //and HSV max values
+            HSVmin = new Scalar(-10, 0.5 * 256, 0.1 * 256);
+            HSVmax = new Scalar(15f / 2, 255, 255);
+            //BGR value for Red:
+            Color = new Scalar(255, 0, 0);
+
+        }
+    }
 }
