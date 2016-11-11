@@ -14,6 +14,7 @@ namespace OpenCVForUnitySample
 		/// </summary>
 		public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 		{
+				//public ColorObject template;
 	
 				/// <summary>
 				/// The web cam texture.
@@ -187,7 +188,7 @@ namespace OpenCVForUnitySample
 								}
 						}
 				}
-		public GameObject cube;
+		//public GameObject cube;
 				private void updateLayout ()
 				{
 						gameObject.transform.localRotation = new Quaternion (0, 0, 0, 0);
@@ -221,8 +222,8 @@ namespace OpenCVForUnitySample
 				// Update is called once per frame
 				void FixedUpdate ()
 				{
-			if (Input.GetKeyDown (KeyCode.Space))
-				initDone = !initDone;
+					if (Input.GetKeyDown (KeyCode.Space) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+						initDone = !initDone;
 						if (!initDone)
 								return;
 
@@ -265,8 +266,8 @@ namespace OpenCVForUnitySample
 								//create some temp fruit objects so that
 								//we can use their member functions/information
 								//ColorObject blue = new ColorObject ("blue");
-								ColorObject yellow = new ColorObject ("banana");
-								ColorObject red = new ColorObject ("red shit");
+								ColorObject yellow = new ColorObject ("yellow");
+								ColorObject red = new ColorObject ("red");
 								//ColorObject green = new ColorObject ("green");
 						
 								//first find blue objects
@@ -376,6 +377,8 @@ namespace OpenCVForUnitySample
 						List<MatOfPoint> contours = new List<MatOfPoint> ();
 						Mat hierarchy = new Mat ();
 						//find contours of filtered image using openCV findContours function
+			//if (contours.Count > 0)
+			//			Debug.LogWarning(contours[0].toList().Count);
 						Imgproc.findContours (temp, contours, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
 						//use moments method to find our filtered object
 

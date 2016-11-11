@@ -48,19 +48,19 @@ public class ColorObject
 						setColor (new Scalar (0, 255, 0));
 			
 				}
-				if (name == "banana") {
+				if (name == "yellow") {
 			
 						//TODO: use "calibration mode" to find HSV min
 						//and HSV max values
 			
-						setHSVmin (new Scalar (20, 124, 100));
+						setHSVmin (new Scalar (20, 124, 123));
 						setHSVmax (new Scalar (30, 256, 256));
 			
 						//BGR value for Red:
 						setColor (new Scalar (255, 255, 0));
 			
 				}
-				if (name == "red shit") {
+				if (name == "red") {
 			
 						//TODO: use "calibration mode" to find HSV min
 						//and HSV max values
