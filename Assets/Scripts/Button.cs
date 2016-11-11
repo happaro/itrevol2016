@@ -13,6 +13,11 @@ public class Button : MonoBehaviour
 	public bool pushingAction = false;
 	private bool isActive = true;
 
+	public enum ActionType
+	{
+		Menu
+	}
+	public ActionType action;
 	public void SetActive(bool active, bool collider = false)
 	{
 		GetComponent<SpriteRenderer> ().sprite = active ? enableSprite : disableSprite;
@@ -76,6 +81,8 @@ public class Button : MonoBehaviour
 
 	protected virtual void Action()
 	{
-		myAction ();
+		if (action == ActionType.Menu)
+			Application.LoadLevel (1);
+		//myAction ();
 	}
 }

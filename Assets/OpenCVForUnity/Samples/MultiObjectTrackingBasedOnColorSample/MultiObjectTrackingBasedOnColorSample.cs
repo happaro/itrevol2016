@@ -66,12 +66,12 @@ namespace OpenCVForUnitySample
 				/// <summary>
 				/// max number of objects to be detected in frame
 				/// </summary>
-				const int MAX_NUM_OBJECTS = 50;
+				const int MAX_NUM_OBJECTS = 20;
 		
 				/// <summary>
 				/// minimum and maximum object area
 				/// </summary>
-				const int MIN_OBJECT_AREA = 20 * 20;
+				const int MIN_OBJECT_AREA = 70 * 70;
 
 				/// <summary>
 				/// max object area
@@ -142,11 +142,11 @@ namespace OpenCVForUnitySample
 
 						while (true) {
 								//If you want to use webcamTexture.width and webcamTexture.height on iOS, you have to wait until webcamTexture.didUpdateThisFrame == 1, otherwise these two values will be equal to 16. (http://forum.unity3d.com/threads/webcamtexture-and-error-0x0502.123922/)
-								#if UNITY_IOS && !UNITY_EDITOR && (UNITY_4_6_3 || UNITY_4_6_4 || UNITY_5_0_0 || UNITY_5_0_1)
+								#if UNITY_ANDROID && !UNITY_EDITOR
 				                if (webCamTexture.width > 16 && webCamTexture.height > 16) {
 								#else
 								if (webCamTexture.didUpdateThisFrame) {
-										#if UNITY_IOS && !UNITY_EDITOR && UNITY_5_2                                    
+										#if UNITY_ANDROID && !UNITY_EDITOR 
 										while (webCamTexture.width <= 16) {
 												webCamTexture.GetPixels32 ();
 												yield return new WaitForEndOfFrame ();
@@ -226,7 +226,7 @@ namespace OpenCVForUnitySample
 						}
 
 
-						#if UNITY_IOS && !UNITY_EDITOR && (UNITY_4_6_3 || UNITY_4_6_4 || UNITY_5_0_0 || UNITY_5_0_1)
+						#if UNITY_ANDROID && !UNITY_EDITOR
 				        if (webCamTexture.width > 16 && webCamTexture.height > 16) {
 						#else
 						if (webCamTexture.didUpdateThisFrame) {
@@ -258,8 +258,8 @@ namespace OpenCVForUnitySample
 								//create some temp fruit objects so that
 								//we can use their member functions/information
 								//ColorObject blue = new ColorObject ("blue");
-								ColorObject yellow = new ColorObject ("yellow");
-								//ColorObject red = new ColorObject ("red");
+								ColorObject yellow = new ColorObject ("banana");
+								ColorObject red = new ColorObject ("red shit");
 								//ColorObject green = new ColorObject ("green");
 						
 								//first find blue objects
@@ -267,18 +267,23 @@ namespace OpenCVForUnitySample
 								Core.inRange (hsvMat, blue.getHSVmin (), blue.getHSVmax (), thresholdMat);
 								morphOps (thresholdMat);
 								trackFilteredObject (blue, thresholdMat, hsvMat, rgbMat);*/
+								
+
 								//then yellows
 								Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
 								Core.inRange (hsvMat, yellow.getHSVmin (), yellow.getHSVmax (), thresholdMat);
 								morphOps (thresholdMat);
 								trackFilteredObject (yellow, thresholdMat, hsvMat, rgbMat);
+
+
 								//then reds
-								/*Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
+								Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
 								Core.inRange (hsvMat, red.getHSVmin (), red.getHSVmax (), thresholdMat);
 								morphOps (thresholdMat);
 								trackFilteredObject (red, thresholdMat, hsvMat, rgbMat);
+								
 								//then greens
-								Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
+								/*Imgproc.cvtColor (rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
 								Core.inRange (hsvMat, green.getHSVmin (), green.getHSVmax (), thresholdMat);
 								morphOps (thresholdMat);
 								trackFilteredObject (green, thresholdMat, hsvMat, rgbMat);*/
@@ -297,7 +302,7 @@ namespace OpenCVForUnitySample
 	
 				public void OnBackButton ()
 				{
-						Application.LoadLevel ("OpenCVForUnitySample");
+						Application.LoadLevel ("Menu");
 				}
 				
 				public void OnChangeCameraButton ()
@@ -352,9 +357,10 @@ namespace OpenCVForUnitySample
 				/// <param name="threshold">Threshold.</param>
 				/// <param name="HSV">HS.</param>
 				/// <param name="cameraFeed">Camera feed.</param>
+		public TextMesh txt;
+
 				void trackFilteredObject (ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
 				{
-					
 						List<ColorObject> colorObjects = new List<ColorObject> ();
 						Mat temp = new Mat ();
 						threshold.copyTo (temp);
@@ -364,6 +370,7 @@ namespace OpenCVForUnitySample
 						//find contours of filtered image using openCV findContours function
 						Imgproc.findContours (temp, contours, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
 						//use moments method to find our filtered object
+
 						double refArea = 0;
 						bool colorObjectFound = false;
 						if (hierarchy.rows () > 0) {

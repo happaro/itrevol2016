@@ -48,7 +48,7 @@ public class ColorObject
 						setColor (new Scalar (0, 255, 0));
 			
 				}
-				if (name == "yellow") {
+				if (name == "banana") {
 			
 						//TODO: use "calibration mode" to find HSV min
 						//and HSV max values
@@ -60,7 +60,7 @@ public class ColorObject
 						setColor (new Scalar (255, 255, 0));
 			
 				}
-				if (name == "red") {
+				if (name == "red shit") {
 			
 						//TODO: use "calibration mode" to find HSV min
 						//and HSV max values
