@@ -3,6 +3,8 @@ using System.Collections;
 
 using OpenCVForUnity;
 using System.Collections.Generic;
+using System;
+using UnityEngine.UI;
 
 namespace OpenCVForUnitySample
 {
@@ -139,14 +141,16 @@ namespace OpenCVForUnitySample
 						// Starts the camera
 						webCamTexture.Play ();
 
+			Debug.LogWarning ("Play");
+
 
 						while (true) {
 								//If you want to use webcamTexture.width and webcamTexture.height on iOS, you have to wait until webcamTexture.didUpdateThisFrame == 1, otherwise these two values will be equal to 16. (http://forum.unity3d.com/threads/webcamtexture-and-error-0x0502.123922/)
-								#if UNITY_ANDROID && !UNITY_EDITOR
+								#if UNITY_IOS && !UNITY_EDITOR
 				                if (webCamTexture.width > 16 && webCamTexture.height > 16) {
 								#else
 								if (webCamTexture.didUpdateThisFrame) {
-										#if UNITY_ANDROID && !UNITY_EDITOR 
+										#if UNITY_IOS && !UNITY_EDITOR 
 										while (webCamTexture.width <= 16) {
 												webCamTexture.GetPixels32 ();
 												yield return new WaitForEndOfFrame ();
@@ -168,19 +172,22 @@ namespace OpenCVForUnitySample
 										MAX_OBJECT_AREA = (int)(webCamTexture.height * webCamTexture.width / 1.5);
 						
 										gameObject.GetComponent<Renderer> ().material.mainTexture = texture;
+										//cube.GetComponent<Renderer> ().material.mainTexture = texture;
+					Debug.LogWarning(gameObject.GetComponent<Renderer> ().material != null);
+					Debug.LogWarning(texture.height + " and " + texture.width);
 
 										updateLayout ();
 
 										screenOrientation = Screen.orientation;
 										initDone = true;
-					
+					Debug.LogWarning ("Init done");
 										break;
 								} else {
 										yield return 0;
 								}
 						}
 				}
-
+		public GameObject cube;
 				private void updateLayout ()
 				{
 						gameObject.transform.localRotation = new Quaternion (0, 0, 0, 0);
@@ -212,7 +219,7 @@ namespace OpenCVForUnitySample
 
 
 				// Update is called once per frame
-				void Update ()
+				void FixedUpdate ()
 				{
 			if (Input.GetKeyDown (KeyCode.Space))
 				initDone = !initDone;
@@ -226,7 +233,7 @@ namespace OpenCVForUnitySample
 						}
 
 
-						#if UNITY_ANDROID && !UNITY_EDITOR
+						#if UNITY_IOS && !UNITY_EDITOR
 				        if (webCamTexture.width > 16 && webCamTexture.height > 16) {
 						#else
 						if (webCamTexture.didUpdateThisFrame) {
@@ -321,10 +328,11 @@ namespace OpenCVForUnitySample
 				/// <param name="hierarchy">Hierarchy.</param>
 				void drawObject (List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
 				{
-
+			txt.text = theColorObjects.Count.ToString ();
+			//Debug.LogWarning (theColorObjects.Count);
 						for (int i = 0; i < theColorObjects.Count; i++) {
-				Imgproc.drawContours (frame, contours, i, theColorObjects [i].getColor (), 3, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point ());
-				Core.circle (frame, new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos ()), 5, theColorObjects [i].getColor ());
+				Imgproc.drawContours (frame, contours, i, theColorObjects [i].getColor (), 3, 4, hierarchy, int.MaxValue, new OpenCVForUnity.Point ());
+				//Core.circle (frame, new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos ()), 5, theColorObjects [i].getColor ());
 				Core.putText (frame, theColorObjects [i].getXPos () + " , " + theColorObjects [i].getYPos (), new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos () + 20), 1, 1, theColorObjects [i].getColor (), 2);
 				Core.putText (frame, theColorObjects [i].getType (), new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos () - 20), 1, 2, theColorObjects [i].getColor (), 2);
 						}
@@ -357,7 +365,7 @@ namespace OpenCVForUnitySample
 				/// <param name="threshold">Threshold.</param>
 				/// <param name="HSV">HS.</param>
 				/// <param name="cameraFeed">Camera feed.</param>
-		public TextMesh txt;
+		public Text txt;
 
 				void trackFilteredObject (ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
 				{
@@ -376,7 +384,8 @@ namespace OpenCVForUnitySample
 						if (hierarchy.rows () > 0) {
 								int numObjects = hierarchy.rows ();
 
-//						Debug.Log("hierarchy " + hierarchy.ToString());
+				//txt.text = hierarchy.rows ().ToString ();
+				//Debug.Log("hierarchy " + hierarchy.ToString());
 
 								//if number of objects greater than MAX_NUM_OBJECTS we have a noisy filter
 								if (numObjects < MAX_NUM_OBJECTS) {
