@@ -14,8 +14,8 @@ namespace OpenCVForUnitySample
         const int MIN_OBJECT_AREA = 100 * 100;
 
         public bool isRed, isGreen, isBlue, isYellow;
-        public bool shouldUseFrontFacing = false;
-
+        public bool shouldUseFrontFacing = false;       
+        
 		public Text txt;
 
         private WebCamTexture webCamTexture;
@@ -35,8 +35,15 @@ namespace OpenCVForUnitySample
 		public int min1, min2, min3, max1, max2, max3;
 		public bool debugColor = false;
 
+        public Dictionary<String, ColorObject> MaxItems { get; set; }
+
         void Start()
         {
+            MaxItems = new Dictionary<String, ColorObject>();
+            MaxItems.Add("red", new ColorObject());
+            MaxItems.Add("green", new ColorObject());
+            MaxItems.Add("yellow", new ColorObject());
+            MaxItems.Add("blue", new ColorObject());
             StartCoroutine(Init());
         }
 
@@ -330,7 +337,8 @@ namespace OpenCVForUnitySample
 
         void TrackFilteredObject(ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
         {
-			
+            MaxItems[theColorObject.ColorName] = new ColorObject();
+
             List<ColorObject> colorObjects = new List<ColorObject>();
             Mat temp = new Mat();
             threshold.copyTo(temp);
@@ -351,11 +359,12 @@ namespace OpenCVForUnitySample
                     {
 
                         Moments moment = Imgproc.moments(contours[i]);
-                        double area = moment.get_m00();
+                        float area = (float)moment.get_m00();
 
                         //if the area is less than MIN_OBJECT_AREA then it is probably just noise
                         if (area > MIN_OBJECT_AREA)
                         {
+
                             ColorObject colorObject = new ColorObject();
                             colorObject.Area = area;
                             colorObject.XPos = (int)(moment.get_m10() / area);
@@ -364,9 +373,12 @@ namespace OpenCVForUnitySample
                             colorObject.Color = theColorObject.Color;
 
                             colorObjects.Add(colorObject);
-
                             colorObjectFound = true;
 
+                            if(area > MaxItems[theColorObject.ColorName].Area)
+                            {
+                                MaxItems[theColorObject.ColorName] = colorObject;
+                            }
                         }
                         else
                         {
