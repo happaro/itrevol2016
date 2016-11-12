@@ -56,6 +56,7 @@ public class MainController : MonoBehaviour
 
 	public void Scan()
 	{
+		GameObject.FindObjectOfType<AudioManager> ().Click ();
 		StartCoroutine (IEScan());	
 	}
 
@@ -74,6 +75,7 @@ public class MainController : MonoBehaviour
 		} 
 		else 
 		{
+			GameObject.FindObjectOfType<AudioManager> ().Select ();
 			points++;	
 			pointText.text = points.ToString ();
 

@@ -136,6 +136,7 @@
      <Compile Include="Assets\Postprocess\PBX\PBXSections.cs" />
      <Compile Include="Assets\Postprocess\PBX\PBXUtils.cs" />
      <Compile Include="Assets\Postprocess\Properties\AssemblyInfo.cs" />
+     <Compile Include="Assets\Scripts\AudioManager.cs" />
      <Compile Include="Assets\Scripts\Button.cs" />
      <Compile Include="Assets\Scripts\ColorItem.cs" />
      <Compile Include="Assets\Scripts\CoordinateConvertor.cs" />

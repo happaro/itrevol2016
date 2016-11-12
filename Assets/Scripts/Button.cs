@@ -80,6 +80,7 @@ public class Button : MonoBehaviour
 				var target = GameObject.FindObjectOfType<TargetItem> ();
 				target.NewTarget ();
 				GameObject.FindObjectOfType<MainController> ().ResetBitches();
+				GameObject.FindObjectOfType<AudioManager> ().Click ();
 				 break;
 			case ActionType.Scan:
 				GameObject.FindObjectOfType<MainController> ().Scan();
@@ -88,7 +89,8 @@ public class Button : MonoBehaviour
 				SceneManager.LoadScene (0);
 				break;
 			case ActionType.Play:
-				SceneManager.LoadScene (1);
+				SceneManager.LoadScene (1);GameObject.FindObjectOfType<AudioManager> ().Click ();
+				GameObject.FindObjectOfType<AudioManager> ().Click ();
 				break;
 			}
 		}
