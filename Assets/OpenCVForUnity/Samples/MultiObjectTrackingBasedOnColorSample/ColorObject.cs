@@ -8,6 +8,7 @@ public class ColorObject
     public Scalar HSVmin { get; set; }
     public Scalar HSVmax { get; set; }
     public Scalar Color { get; set; }
+    public double Area { get; set; }
 
     public ColorObject()
     {
@@ -36,8 +37,8 @@ public class ColorObject
                 Color = new Scalar(255, 255, 0);
                 break;
             case "red":
-                HSVmin = new Scalar(-10, 0.4 * 256, 0.2 * 256);
-                HSVmax = new Scalar(20f / 2, 255, 255);
+                HSVmin = new Scalar(0, 0.4 * 256, 0.3 * 256);
+                HSVmax = new Scalar(30f / 2, 255, 255);
                 Color = new Scalar(255, 0, 0);
                 break;
         }
