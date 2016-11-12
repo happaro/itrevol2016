@@ -17,8 +17,7 @@ namespace OpenCVForUnitySample
         public bool shouldUseFrontFacing = false;       
         
 		public Text txt;
-
-        private WebCamTexture webCamTexture;
+        public WebCamTexture webCamTexture;
         private WebCamDevice webCamDevice;
         private Color32[] colors;
         private int width = 640;
