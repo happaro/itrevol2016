@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class TargetItem : MonoBehaviour 
 {
-    string target;
+    public string target = "yellow";
     string[] names = { "red", "green", "yellow", "blue" };
     public Sprite red;
     public Sprite green;
@@ -13,17 +13,22 @@ public class TargetItem : MonoBehaviour
 	public Text label;
 
 	private Image img;
-
-	void Start () 
+	private System.Random rand;
+	void Awake () 
 	{
 		img = gameObject.GetComponent<Image>();
         NewTarget();
+		rand = new System.Random ();
 	}
 	   
     public void NewTarget()
     {
-        System.Random rand = new System.Random();
-        target = names[rand.Next(4)];
+		string newString = target;
+
+		while (newString == target) 
+		{
+			target = names[Random.Range(0, names.Length)];
+		}
         label.text = target;
         switch (target)
         {

@@ -19,7 +19,8 @@ public class Button : MonoBehaviour
 	{
 		Menu,
 		Play,
-		Scan
+		Scan,
+		SelectColor
 	}
 	public ActionType actionType;
 
@@ -75,6 +76,11 @@ public class Button : MonoBehaviour
 		{
 			switch (actionType) 
 			{
+			case ActionType.SelectColor:
+				var target = GameObject.FindObjectOfType<TargetItem> ();
+				target.NewTarget ();
+				GameObject.FindObjectOfType<MultiObjectTrackingBasedOnColorSample> ().ResetBitches();
+				 break;
 			case ActionType.Scan:
 				GameObject.FindObjectOfType<MultiObjectTrackingBasedOnColorSample> ().Scan();
 				break;

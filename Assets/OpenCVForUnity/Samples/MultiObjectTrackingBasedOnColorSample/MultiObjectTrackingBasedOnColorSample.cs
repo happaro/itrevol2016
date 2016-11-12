@@ -24,6 +24,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	public Dictionary<String, ColorObject> MaxItems { get; set; }
 
     private WebCamDevice webCamDevice;
+	private TargetItem target;
     private Color32[] colors;
 	private int width = 640, height = 480;
 	private int MAX_OBJECT_AREA;
@@ -37,6 +38,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 
     void Start()
     {
+		target = GameObject.FindObjectOfType<TargetItem> ();
         MaxItems = new Dictionary<String, ColorObject>();
         MaxItems.Add("red", new ColorObject());
         MaxItems.Add("green", new ColorObject());
@@ -51,6 +53,11 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 		StartCoroutine (IEScan());	
 	}
 
+	public void ResetBitches()
+	{
+		foreach (var item in MaxItems)
+			MaxItems [item.Key].Area = 0;
+	}
 	public IEnumerator IEScan()
 	{
 		isScanning = true;
@@ -58,8 +65,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 		yield return new WaitForSeconds (5);
 		isScanning = false;
 		scanButton.gameObject.SetActive (true);
-		foreach (var item in MaxItems)
-			MaxItems [item.Key].Area = 0;
+		ResetBitches ();
 	}
 	
     private IEnumerator Init()
@@ -218,7 +224,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 			if (isScanning)
 			{
 					
-	            if (isYellow)
+				if (isYellow && target.target == "yellow")
 	            {
 					ColorObject yellow = new ColorObject("yellow", min1, min2, min3, max1, max2, max3, debugColor);
 
@@ -228,7 +234,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	                TrackFilteredObject(yellow, thresholdMat, hsvMat, rgbMat);
 	            }
 
-	            if (isRed)
+				if (isRed && target.target == "red")
 	            {
 					ColorObject red = new ColorObject("red", min1, min2, min3, max1, max2, max3, debugColor);
 
@@ -238,7 +244,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	                TrackFilteredObject(red, thresholdMat, hsvMat, rgbMat);
 	            }
 
-	            if (isGreen)
+				if (isGreen && target.target == "green")
 	            {
 
 					ColorObject green = new ColorObject("green", min1, min2, min3, max1, max2, max3, debugColor);
@@ -249,7 +255,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	                TrackFilteredObject(green, thresholdMat, hsvMat, rgbMat);
 	            }
 
-	            if (isBlue)
+				if (isBlue && target.target == "blue")
 	            {
 					ColorObject blue = new ColorObject("blue", min1, min2, min3, max1, max2, max3, debugColor);
 	                Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
@@ -287,7 +293,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 			if (drawContours)
             	Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 4, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point());
 			//Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 3);
-			Core.circle(frame, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos), (int)(Math.Sqrt(theColorObjects[i].Area)/2), theColorObjects[i].Color, 4);
+			//Core.circle(frame, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos), (int)(Math.Sqrt(theColorObjects[i].Area)/2), theColorObjects[i].Color, 4);
 			//Core.putText(frame, theColorObjects[i].XPos + " , " + theColorObjects[i].YPos, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos + 20), 1, 1, theColorObjects[i].Color, 2);
 			Core.putText(frame, theColorObjects[i].ColorName + ": " + (int)(Math.Sqrt(theColorObjects[i].Area)), new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 40), 1, 2, theColorObjects[i].Color, 2);
         }
