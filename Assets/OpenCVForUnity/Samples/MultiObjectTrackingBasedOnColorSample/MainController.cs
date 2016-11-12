@@ -64,6 +64,8 @@ public class MainController : MonoBehaviour
 	{
 		foreach (var item in MaxItems)
 			MaxItems [item.Key].Area = 0;
+
+
 	}
 
 	public void AddPoint()
@@ -78,7 +80,8 @@ public class MainController : MonoBehaviour
 			GameObject.FindObjectOfType<AudioManager> ().Select ();
 			points++;	
 			pointText.text = points.ToString ();
-
+			isScanning = false;
+			scanerImage.rectTransform.localPosition = new Vector3 (0, -Screen.height / 2f - 20, 0);
 		}
 	}
 

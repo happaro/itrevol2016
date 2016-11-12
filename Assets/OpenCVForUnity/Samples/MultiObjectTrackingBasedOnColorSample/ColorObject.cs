@@ -77,8 +77,8 @@ public class ColorObject : IComparable<ColorObject>
 			} 
 			else
 			{
-				HSVmin = new Scalar (0, 140, 150);
-				HSVmax = new Scalar (13, 256, 256);
+				HSVmin = new Scalar (0, 100, 100);
+				HSVmax = new Scalar (20, 256, 256);
 			}
             Color = new Scalar(255, 0, 0);
             break;
