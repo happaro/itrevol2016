@@ -12,7 +12,7 @@ public class MainController : MonoBehaviour
     public Text timerText, pointText;
     const int MAX_NUM_OBJECTS = 2;
     const int MIN_OBJECT_AREA = 100 * 100;
-    public float timer = 300;
+    public float timer = 60;
 	public int points = 0;
     bool isGameOver = false;
 	//DEBUG
@@ -337,16 +337,10 @@ public class MainController : MonoBehaviour
 
     void MorphOps(Mat thresh)
     {
-
-        //create structuring element that will be used to "dilate" and "erode" image.
-        //the element chosen here is a 3px by 3px rectangle
         Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
-        //dilate with larger element so make sure object is nicely visible
         Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(8, 8));
-
         Imgproc.erode(thresh, thresh, erodeElement);
         Imgproc.erode(thresh, thresh, erodeElement);
-
         Imgproc.dilate(thresh, thresh, dilateElement);
         Imgproc.dilate(thresh, thresh, dilateElement);
     }
@@ -415,7 +409,6 @@ public class MainController : MonoBehaviour
 			window.SetActive (true);
             isGameOver = true;
 			lastText.text = string.Format ("Игра окончена!\n Вы собрали {0} фруктов \nСпасибо за игру :)", points);
-//            GameObject.FindObjectOfType<WindowInfo>().Open("Игра кончена", string.Format("Игра окончена\n\nСпасибо за игру! \n Ваш счет:\n{0}\n\nЛучший счет:\n{1}", SaveManager.currentScore, SaveManager.bestScore), () => { Application.LoadLevel(0); });
             SaveManager.bestScore = SaveManager.bestScore < SaveManager.currentScore ? SaveManager.currentScore : SaveManager.bestScore;
         }
     }
