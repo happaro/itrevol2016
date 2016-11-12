@@ -3,7 +3,7 @@ using System.Collections;
 
 public class WindowInfo : Window 
 {
-	public Button okButton;
+	public UnityEngine.UI.Button okButton;
 	public TextMesh title;
 	public TextMesh info;
 
@@ -11,13 +11,11 @@ public class WindowInfo : Window
 	{
         base.Open();
 		info.text = newText;
-        okButton.myAction = () => { base.Close(); };
 	}
 
 	public void Open(string titleText, string infoText, Button.MyAction closeActionPlus)
 	{
         base.Open();
-		okButton.myAction = closeActionPlus;
 		title.text = titleText;
 		info.text = infoText;
 	}

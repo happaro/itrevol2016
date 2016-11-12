@@ -20,7 +20,8 @@ public class MainController : MonoBehaviour
 	public int min1, min2, min3, max1, max2, max3;
 	public bool debugColor = false, drawContours = true;
     //------
-
+	public GameObject window;
+	public Text lastText;
 	public Image scanerImage;
 	public bool isRed, isGreen, isBlue, isYellow;
     public bool shouldUseFrontFacing = false;       
@@ -298,6 +299,11 @@ public class MainController : MonoBehaviour
         }
     }
 
+	public void Exit()
+	{
+		SceneManager.LoadScene (0);	
+	}
+
     void OnDisable()
     {
         webCamTexture.Stop();
@@ -406,8 +412,10 @@ public class MainController : MonoBehaviour
 
         if (timer < 0)
         {
+			window.SetActive (true);
             isGameOver = true;
-            GameObject.FindObjectOfType<WindowInfo>().Open("Игра кончена", string.Format("Игра окончена\n\nСпасибо за игру! \n Ваш счет:\n{0}\n\nЛучший счет:\n{1}", SaveManager.currentScore, SaveManager.bestScore), () => { Application.LoadLevel(0); });
+			lastText.text = string.Format ("Игра окончена!\n Вы собрали {0} фруктов \nСпасибо за игру :)", points);
+//            GameObject.FindObjectOfType<WindowInfo>().Open("Игра кончена", string.Format("Игра окончена\n\nСпасибо за игру! \n Ваш счет:\n{0}\n\nЛучший счет:\n{1}", SaveManager.currentScore, SaveManager.bestScore), () => { Application.LoadLevel(0); });
             SaveManager.bestScore = SaveManager.bestScore < SaveManager.currentScore ? SaveManager.currentScore : SaveManager.bestScore;
         }
     }
