@@ -21,7 +21,7 @@ namespace OpenCVForUnitySample
         Texture2D texture;
         bool initDone = false;
         ScreenOrientation screenOrientation = ScreenOrientation.Unknown;
-        const int MAX_NUM_OBJECTS = 20;
+        const int MAX_NUM_OBJECTS = 2;
         const int MIN_OBJECT_AREA = 70 * 70;
         int MAX_OBJECT_AREA;
         Mat thresholdMat;
@@ -289,8 +289,30 @@ namespace OpenCVForUnitySample
         /// <param name="temp">Temp.</param>
         /// <param name="contours">Contours.</param>
         /// <param name="hierarchy">Hierarchy.</param>
+		public float MIN_MAX_DISTANCE = 100;
         void drawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
         {
+			Debug.LogWarning (theColorObjects.Count + " and " + contours.Count);
+			//if (theColorObjects.Count != contours.Count)
+				//Debug.LogWarning ("FUCKED UP");
+			/*for (int i = 0; i < contours.Count; i++) 
+			{
+				float tmpDist = 0;
+				var conts = contours [i].toList ();
+				for (int j = 0; j < conts.Count; j++)
+				{
+					for (int k = 0; k < conts.Count; k++)
+					{
+						float currentDist = Vector2.Distance (new Vector2 ((float)conts [j].x, (float)conts [j].y), new Vector2 ((float)conts [k].x, (float)conts [k].y));
+						if (currentDist > tmpDist)
+							tmpDist = currentDist;
+					}
+				}
+				if (tmpDist < MIN_MAX_DISTANCE)
+					theColorObjects.Remove (theColorObjects [i]);
+				else
+					Debug.LogWarning ("Distance = " + tmpDist);
+			}*/
             txt.text = theColorObjects.Count.ToString();
             //Debug.LogWarning (theColorObjects.Count);
             for (int i = 0; i < theColorObjects.Count; i++)
