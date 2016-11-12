@@ -79,10 +79,10 @@ public class Button : MonoBehaviour
 			case ActionType.SelectColor:
 				var target = GameObject.FindObjectOfType<TargetItem> ();
 				target.NewTarget ();
-				GameObject.FindObjectOfType<MultiObjectTrackingBasedOnColorSample> ().ResetBitches();
+				GameObject.FindObjectOfType<MainController> ().ResetBitches();
 				 break;
 			case ActionType.Scan:
-				GameObject.FindObjectOfType<MultiObjectTrackingBasedOnColorSample> ().Scan();
+				GameObject.FindObjectOfType<MainController> ().Scan();
 				break;
 			case ActionType.Menu:
 				SceneManager.LoadScene (0);

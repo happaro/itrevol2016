@@ -3,7 +3,7 @@ using System;
 
 public class ColorItem : MonoBehaviour 
 {
-    public MultiObjectTrackingBasedOnColorSample sample;
+    public MainController sample;
     public string name;
 	void Update () 
     {

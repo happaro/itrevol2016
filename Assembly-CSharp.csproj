@@ -46,7 +46,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\OpenCVForUnity\Samples\MultiObjectTrackingBasedOnColorSample\ColorObject.cs" />
-     <Compile Include="Assets\OpenCVForUnity\Samples\MultiObjectTrackingBasedOnColorSample\MultiObjectTrackingBasedOnColorSample.cs" />
+     <Compile Include="Assets\OpenCVForUnity\Samples\MultiObjectTrackingBasedOnColorSample\MainController.cs" />
      <Compile Include="Assets\OpenCVForUnity\org\opencv\DisposableObject.cs" />
      <Compile Include="Assets\OpenCVForUnity\org\opencv\DisposableOpenCVObject.cs" />
      <Compile Include="Assets\OpenCVForUnity\org\opencv\calib3d\Calib3d.cs" />

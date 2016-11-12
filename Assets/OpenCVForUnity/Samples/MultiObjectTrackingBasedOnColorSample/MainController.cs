@@ -5,8 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using OpenCVForUnity;
+using Holoville.HOTween;
 
-public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
+public class MainController : MonoBehaviour
 {
     const int MAX_NUM_OBJECTS = 2;
     const int MIN_OBJECT_AREA = 100 * 100;
@@ -17,6 +18,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	public bool debugColor = false, drawContours = true;
     //------
 
+	public Image scanerImage;
 	public bool isRed, isGreen, isBlue, isYellow;
     public bool shouldUseFrontFacing = false;       
     public WebCamTexture webCamTexture;
@@ -62,7 +64,10 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	{
 		isScanning = true;
 		scanButton.gameObject.SetActive (false);
-		yield return new WaitForSeconds (5);
+		HOTween.To (scanerImage.rectTransform, 3, "localPosition", new Vector3(0, Screen.height / 2f + 20, 0));
+		yield return new WaitForSeconds (3);
+		HOTween.To (scanerImage.rectTransform, 3, "localPosition", new Vector3(0, -Screen.height / 2f - 20, 0));
+		yield return new WaitForSeconds (3);
 		isScanning = false;
 		scanButton.gameObject.SetActive (true);
 		ResetBitches ();
