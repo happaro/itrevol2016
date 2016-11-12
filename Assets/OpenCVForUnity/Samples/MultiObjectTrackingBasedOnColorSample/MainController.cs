@@ -9,9 +9,12 @@ using Holoville.HOTween;
 
 public class MainController : MonoBehaviour
 {
+    public TextMesh timerText, pointText;
     const int MAX_NUM_OBJECTS = 2;
     const int MIN_OBJECT_AREA = 100 * 100;
-
+    public float timer = 300;
+    public float points = 0;
+    bool isGameOver = false;
 	//DEBUG
 	[Range(0, 256)]
 	public int min1, min2, min3, max1, max2, max3;
@@ -372,5 +375,18 @@ public class MainController : MonoBehaviour
             }
         }
     }
+    void FixedUpdate()
+    {
+        if (isGameOver)
+            return;
+        timer -= Time.deltaTime;
+        timerText.text = string.Format("{0:00}:{1:00}", (int)timer / 60, (int)timer % 60);
 
+        if (timer < 0)
+        {
+            isGameOver = true;
+            GameObject.FindObjectOfType<WindowInfo>().Open("Игра кончена", string.Format("Игра окончена\n\nСпасибо за игру! \n Ваш счет:\n{0}\n\nЛучший счет:\n{1}", SaveManager.currentScore, SaveManager.bestScore), () => { Application.LoadLevel(0); });
+            SaveManager.bestScore = SaveManager.bestScore < SaveManager.currentScore ? SaveManager.currentScore : SaveManager.bestScore;
+        }
+    }
 }
