@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-
-using OpenCVForUnity;
+﻿using OpenCVForUnity;
 
 public class ColorObject
 {
