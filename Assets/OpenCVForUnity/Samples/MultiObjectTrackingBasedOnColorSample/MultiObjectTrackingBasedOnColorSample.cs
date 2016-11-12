@@ -10,7 +10,7 @@ namespace OpenCVForUnitySample
 {
     public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
     {
-        const int MAX_NUM_OBJECTS = 20;
+        const int MAX_NUM_OBJECTS = 2;
         const int MIN_OBJECT_AREA = 70 * 70;
 
         public bool isRed, isGreen, isBlue, isYellow;
@@ -306,7 +306,7 @@ namespace OpenCVForUnitySample
                 Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 3, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point());
                 //Core.circle (frame, new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos ()), 5, theColorObjects [i].getColor ());
                 Core.putText(frame, theColorObjects[i].XPos + " , " + theColorObjects[i].YPos, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos + 20), 1, 1, theColorObjects[i].Color, 2);
-                Core.putText(frame, theColorObjects[i].ColorName, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 20), 1, 2, theColorObjects[i].Color, 2);
+                Core.putText(frame, theColorObjects[i].ColorName + ": " + theColorObjects[i].Area, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 20), 1, 2, theColorObjects[i].Color, 2);
             }
         }
 
@@ -362,7 +362,7 @@ namespace OpenCVForUnitySample
                         if (area > MIN_OBJECT_AREA)
                         {
                             ColorObject colorObject = new ColorObject();
-
+                            colorObject.Area = area;
                             colorObject.XPos = (int)(moment.get_m10() / area);
                             colorObject.YPos = (int)(moment.get_m01() / area);
                             colorObject.ColorName = theColorObject.ColorName;
