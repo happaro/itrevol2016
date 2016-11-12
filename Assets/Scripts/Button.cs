@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class Button : MonoBehaviour 
 {
@@ -9,38 +10,17 @@ public class Button : MonoBehaviour
 	public MyAction myAction;
 
 	private Vector3 startScale;
-	public Sprite enableSprite, disableSprite;
+	//public Sprite enableSprite, disableSprite;
 	public bool pushingAction = false;
 	private bool isActive = true;
 
 	public enum ActionType
 	{
-		Menu
+		Menu,
+		Play,
+		Scan
 	}
-	public ActionType action;
-	public void SetActive(bool active, bool collider = false)
-	{
-		GetComponent<SpriteRenderer> ().sprite = active ? enableSprite : disableSprite;
-		this.GetComponent<Collider2D> ().enabled = active ? true : collider;
-		isActive = active;
-	}
-
-
-	float timer = 0, delay = 0.1f;
-	void OnMouseOver()
-	{
-		if (isPressed && pushingAction && isActive) 
-		{
-			timer += Time.deltaTime;
-			if (timer > delay)
-			{
-				myAction ();
-				timer = 0;
-			}
-		}
-		else
-			timer = 0;
-	}
+	public ActionType actionType;
 
 	void Awake()
 	{
@@ -81,8 +61,21 @@ public class Button : MonoBehaviour
 
 	protected virtual void Action()
 	{
-		if (action == ActionType.Menu)
-			Application.LoadLevel (1);
-		//myAction ();
+		if (myAction == null) 
+		{
+			switch (actionType) 
+			{
+			case ActionType.Scan:
+				GameObject.FindObjectOfType<MultiObjectTrackingBasedOnColorSample> ().Scan();
+				break;
+			case ActionType.Menu:
+				SceneManager.LoadScene (0);
+				break;
+			case ActionType.Play:
+				SceneManager.LoadScene (1);
+				break;
+			}
+		}
+
 	}
 }

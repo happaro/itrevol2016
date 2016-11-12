@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using OpenCVForUnitySample;
 using System;
 
 public class ColorItem : MonoBehaviour 
@@ -11,6 +10,11 @@ public class ColorItem : MonoBehaviour
         try
         {
             ColorObject colorObject = sample.MaxItems[name];
+			if (sample.MaxItems[name] == null)
+			{
+				transform.position = Vector3.one * 1000;
+				return;
+			}
 			float prop = (float) sample.webCamTexture.height / (float) Screen.height;
 			int xMyScreen = Mathf.RoundToInt(((float)colorObject.XPos / (float)sample.webCamTexture.width) * (float)Screen.width);
 			int yMyScreen = Mathf.RoundToInt(((float)colorObject.YPos / (float)sample.webCamTexture.height) * (float)Screen.height);
