@@ -20,7 +20,7 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	public bool isRed, isGreen, isBlue, isYellow;
     public bool shouldUseFrontFacing = false;       
     public WebCamTexture webCamTexture;
-	public Button scanButton;
+	public UnityEngine.UI.Button scanButton;
 	public Dictionary<String, ColorObject> MaxItems { get; set; }
 
     private WebCamDevice webCamDevice;
@@ -54,9 +54,10 @@ public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
 	public IEnumerator IEScan()
 	{
 		isScanning = true;
+		scanButton.gameObject.SetActive (false);
 		yield return new WaitForSeconds (5);
 		isScanning = false;
-		//for ( int i = 0;
+		scanButton.gameObject.SetActive (true);
 		foreach (var item in MaxItems)
 			MaxItems [item.Key].Area = 0;
 	}

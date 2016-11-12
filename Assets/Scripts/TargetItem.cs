@@ -1,18 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
-public class TargetItem : MonoBehaviour {
+public class TargetItem : MonoBehaviour 
+{
     string target;
     string[] names = { "red", "green", "yellow", "blue" };
-    SpriteRenderer renderer;
     public Sprite red;
     public Sprite green;
     public Sprite yellow;
     public Sprite blue;
-    public TextMesh label;
-	// Use this for initialization
-	void Start () {
-        renderer = gameObject.GetComponent<SpriteRenderer>();
+	public Text label;
+
+	private Image img;
+
+	void Start () 
+	{
+		img = gameObject.GetComponent<Image>();
         NewTarget();
 	}
 	   
@@ -24,16 +28,16 @@ public class TargetItem : MonoBehaviour {
         switch (target)
         {
             case "red":
-                renderer.sprite = red;
+				img.sprite = red;
                 break;
             case "green":
-                renderer.sprite = green;
+				img.sprite = green;
                 break;
             case "yellow":
-                renderer.sprite = yellow;
+				img.sprite = yellow;
                 break;
             case "blue":
-                renderer.sprite = blue;
+				img.sprite = blue;
                 break;
             default:
                 break;

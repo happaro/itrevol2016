@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
-
+//using System
 public class Button : MonoBehaviour 
 {
 	private bool isPressed;
@@ -10,7 +10,8 @@ public class Button : MonoBehaviour
 	public MyAction myAction;
 
 	private Vector3 startScale;
-	//public Sprite enableSprite, disableSprite;
+	public Sprite enableSprite, disableSprite;
+
 	public bool pushingAction = false;
 	private bool isActive = true;
 
@@ -22,10 +23,19 @@ public class Button : MonoBehaviour
 	}
 	public ActionType actionType;
 
+
 	void Awake()
 	{
 		startScale = transform.localScale;
 	}
+
+	public void SetActive(bool active, bool collider = false)
+	{
+		//GetComponent<image> ().sprite = active ? enableSprite : disableSprite;
+		this.GetComponent<Collider2D> ().enabled = active ? true : collider;
+		isActive = active;
+	}
+	
 
 	void DownAction()
 	{
