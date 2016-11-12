@@ -218,7 +218,7 @@ namespace OpenCVForUnitySample
                 }
 
 
-				if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
+				//if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
 				{
 					
                 if (isYellow)
@@ -308,9 +308,10 @@ namespace OpenCVForUnitySample
             for (int i = 0; i < theColorObjects.Count; i++)
             {
                 Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 3, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point());
-                //Core.circle (frame, new OpenCVForUnity.Point (theColorObjects [i].getXPos (), theColorObjects [i].getYPos ()), 5, theColorObjects [i].getColor ());
-                Core.putText(frame, theColorObjects[i].XPos + " , " + theColorObjects[i].YPos, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos + 20), 1, 1, theColorObjects[i].Color, 2);
-                Core.putText(frame, theColorObjects[i].ColorName + ": " + theColorObjects[i].Area, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 20), 1, 2, theColorObjects[i].Color, 2);
+				//Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 3);
+				Core.circle(frame, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos), (int)(Math.Sqrt(theColorObjects[i].Area)/2), theColorObjects[i].Color, 5);
+				//Core.putText(frame, theColorObjects[i].XPos + " , " + theColorObjects[i].YPos, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos + 20), 1, 1, theColorObjects[i].Color, 2);
+				Core.putText(frame, theColorObjects[i].ColorName + ": " + theColorObjects[i].Area, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 40), 1, 2, theColorObjects[i].Color, 2);
             }
         }
 
