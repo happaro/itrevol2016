@@ -29,6 +29,9 @@ namespace OpenCVForUnitySample
         private Mat thresholdMat;
         private Mat hsvMat;
 
+		[Range(0, 256)]
+		public int min1, min2, min3, max1, max2, max3;
+
         void Start()
         {
             StartCoroutine(Init());
@@ -217,7 +220,7 @@ namespace OpenCVForUnitySample
 
                 if (isYellow)
                 {
-                    ColorObject yellow = new ColorObject("yellow");
+					ColorObject yellow = new ColorObject("yellow", min1, min2, min3, max1, max2, max3);
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, yellow.HSVmin, yellow.HSVmax, thresholdMat);
@@ -227,7 +230,7 @@ namespace OpenCVForUnitySample
 
                 if (isRed)
                 {
-                    ColorObject red = new ColorObject("red");
+					ColorObject red = new ColorObject("red", min1, min2, min3, max1, max2, max3);
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, red.HSVmin, red.HSVmax, thresholdMat);
@@ -238,7 +241,7 @@ namespace OpenCVForUnitySample
                 if (isGreen)
                 {
 
-                    ColorObject green = new ColorObject("green");
+					ColorObject green = new ColorObject("green", min1, min2, min3, max1, max2, max3);
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, green.HSVmin, green.HSVmax, thresholdMat);
@@ -248,7 +251,7 @@ namespace OpenCVForUnitySample
 
                 if (isBlue)
                 {
-                    ColorObject blue = new ColorObject("blue");
+					ColorObject blue = new ColorObject("blue", min1, min2, min3, max1, max2, max3);
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, blue.HSVmin, blue.HSVmax, thresholdMat);
                     morphOps(thresholdMat);
@@ -274,9 +277,29 @@ namespace OpenCVForUnitySample
             shouldUseFrontFacing = !shouldUseFrontFacing;
             StartCoroutine(Init());
         }
-
+		public float MIN_MAX_DISTANCE = 100;
         void drawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
         {
+
+			for (int i = 0; i < contours.Count; i++) 
+			{
+				float tmpDist = 0;
+				var conts = contours [i].toList ();
+				for (int j = 0; j < conts.Count; j++) {
+					for (int k = 0; k < conts.Count; k++) {
+						float currentDist = Vector2.Distance (new Vector2 ((float)conts [j].x, (float)conts [j].y), new Vector2 ((float)conts [k].x, (float)conts [k].y));
+						if (currentDist > tmpDist)
+							tmpDist = currentDist;
+					}
+				}
+				if (tmpDist > MIN_MAX_DISTANCE) 
+				{
+					//isPause = true;
+					txt.text = "ВАУ! ВЫ ПОЙМАЛИ ЖЕЛТУЮ ХУ*ТУ!!!";
+				}
+			}
+
+
             txt.text = "" + theColorObjects.Count + " con: " + contours.Count;
             for (int i = 0; i < theColorObjects.Count; i++)
             {
@@ -307,6 +330,7 @@ namespace OpenCVForUnitySample
 
         void trackFilteredObject(ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
         {
+			
             List<ColorObject> colorObjects = new List<ColorObject>();
             Mat temp = new Mat();
             threshold.copyTo(temp);

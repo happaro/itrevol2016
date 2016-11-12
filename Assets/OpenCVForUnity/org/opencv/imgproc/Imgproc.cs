@@ -5767,6 +5767,7 @@ namespace OpenCVForUnity
 						#if UNITY_PRO_LICENSE || ((UNITY_ANDROID || UNITY_IOS) && !UNITY_EDITOR) || UNITY_5
 						List<Mat> contours_tmplm = new List<Mat> ((contours != null) ? contours.Count : 0);
 						Mat contours_mat = Converters.vector_vector_Point_to_Mat (contours, contours_tmplm);
+
 						imgproc_Imgproc_drawContours_10 (image.nativeObj, contours_mat.nativeObj, contourIdx, color.val [0], color.val [1], color.val [2], color.val [3], thickness, lineType, hierarchy.nativeObj, maxLevel, offset.x, offset.y);
 		
 						return;
