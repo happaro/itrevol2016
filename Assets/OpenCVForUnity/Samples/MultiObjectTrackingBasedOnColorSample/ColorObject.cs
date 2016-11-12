@@ -1,7 +1,8 @@
 ﻿using OpenCVForUnity;
+using System;
 
 [System.Serializable]
-public class ColorObject
+public class ColorObject : IComparable<ColorObject>
 {
 	public int XPos { get; set; }
     public int YPos { get; set; }
@@ -9,16 +10,23 @@ public class ColorObject
     public Scalar HSVmin { get; set; }
     public Scalar HSVmax { get; set; }
     public Scalar Color { get; set; }
-
-	public double Area{ get; set;}
+	public float Area{ get; set;}
 
     public ColorObject()
     {
-        ColorName = "Object";
+        XPos = 0;
+        YPos = 0;
+        Area = 0;
+        ColorName = "object";
         Color = new Scalar(0, 0, 0);
     }
 
-	public ColorObject(string name, float min1, float min2, float min3, float max1, float max2, float max3, bool isDebugColor = false)
+    public int CompareTo(ColorObject other)
+    {
+        return Area.CompareTo(other.Area);
+    }
+
+	public ColorObject(string name, float min1, float min2, float min3, float max1, float max2, float max3, bool isDebugColor = false) : base()
     {
 		ColorName = name;
 		switch (ColorName)
@@ -78,4 +86,5 @@ public class ColorObject
 			break;
         }
     }
+
 }
