@@ -16,6 +16,8 @@ namespace OpenCVForUnitySample
         public bool isRed, isGreen, isBlue, isYellow;
         public bool shouldUseFrontFacing = false;
 
+		public Text txt;
+
         private WebCamTexture webCamTexture;
         private WebCamDevice webCamDevice;
         private Color32[] colors;
@@ -108,7 +110,7 @@ namespace OpenCVForUnitySample
                     Debug.LogWarning(gameObject.GetComponent<Renderer>().material != null);
                     Debug.LogWarning(texture.height + " and " + texture.width);
 
-                    updateLayout();
+                    UpdateLayout();
 
                     screenOrientation = Screen.orientation;
                     initDone = true;
@@ -121,8 +123,8 @@ namespace OpenCVForUnitySample
                 }
             }
         }
-        //public GameObject cube;
-        private void updateLayout()
+
+        private void UpdateLayout()
         {
             gameObject.transform.localRotation = new Quaternion(0, 0, 0, 0);
             gameObject.transform.localScale = new Vector3(webCamTexture.width, webCamTexture.height, 1);
@@ -131,8 +133,6 @@ namespace OpenCVForUnitySample
             {
                 gameObject.transform.eulerAngles = new Vector3(0, 0, -90);
             }
-
-
             float width = 0;
             float height = 0;
             if (webCamTexture.videoRotationAngle == 90 || webCamTexture.videoRotationAngle == 270)
@@ -145,7 +145,6 @@ namespace OpenCVForUnitySample
                 width = gameObject.transform.localScale.x;
                 height = gameObject.transform.localScale.y;
             }
-
             float widthScale = (float)Screen.width / width;
             float heightScale = (float)Screen.height / height;
             if (widthScale < heightScale)
@@ -158,12 +157,10 @@ namespace OpenCVForUnitySample
             }
         }
 
-
-        // Update is called once per frame
         void Update()
         {
-//            if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-  //              initDone = !initDone;
+		//	if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+  		// 	initDone = !initDone;
 			if (Input.GetKeyDown (KeyCode.P))
 				isPause = !isPause;
 			if (!initDone)
@@ -173,7 +170,7 @@ namespace OpenCVForUnitySample
             if (screenOrientation != Screen.orientation)
             {
                 screenOrientation = Screen.orientation;
-                updateLayout();
+                UpdateLayout();
             }
 
 
@@ -227,8 +224,8 @@ namespace OpenCVForUnitySample
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, yellow.HSVmin, yellow.HSVmax, thresholdMat);
-                    morphOps(thresholdMat);
-                    trackFilteredObject(yellow, thresholdMat, hsvMat, rgbMat);
+                    MorphOps(thresholdMat);
+                    TrackFilteredObject(yellow, thresholdMat, hsvMat, rgbMat);
                 }
 
                 if (isRed)
@@ -237,8 +234,8 @@ namespace OpenCVForUnitySample
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, red.HSVmin, red.HSVmax, thresholdMat);
-                    morphOps(thresholdMat);
-                    trackFilteredObject(red, thresholdMat, hsvMat, rgbMat);
+                    MorphOps(thresholdMat);
+                    TrackFilteredObject(red, thresholdMat, hsvMat, rgbMat);
                 }
 
                 if (isGreen)
@@ -248,8 +245,8 @@ namespace OpenCVForUnitySample
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, green.HSVmin, green.HSVmax, thresholdMat);
-                    morphOps(thresholdMat);
-                    trackFilteredObject(green, thresholdMat, hsvMat, rgbMat);
+                    MorphOps(thresholdMat);
+                    TrackFilteredObject(green, thresholdMat, hsvMat, rgbMat);
                 }
 
                 if (isBlue)
@@ -257,8 +254,8 @@ namespace OpenCVForUnitySample
 					ColorObject blue = new ColorObject("blue", min1, min2, min3, max1, max2, max3, debugColor);
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, blue.HSVmin, blue.HSVmax, thresholdMat);
-                    morphOps(thresholdMat);
-                    trackFilteredObject(blue, thresholdMat, hsvMat, rgbMat);
+                    MorphOps(thresholdMat);
+                    TrackFilteredObject(blue, thresholdMat, hsvMat, rgbMat);
                 }
 				}
 				Utils.matToTexture2D(rgbMat, texture, colors);
@@ -282,7 +279,8 @@ namespace OpenCVForUnitySample
         }
 		public float MIN_MAX_DISTANCE = 100;
 		public bool isPause = false;
-        void drawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
+
+        void DrawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
         {
 
 			for (int i = 0; i < contours.Count; i++) 
@@ -302,20 +300,18 @@ namespace OpenCVForUnitySample
 					txt.text = "ВАУ! ВЫ ПОЙМАЛИ ЖЕЛТУЮ ХУ*ТУ!!!";
 				}
 			}
-
-
             txt.text = "" + theColorObjects.Count + " con: " + contours.Count;
             for (int i = 0; i < theColorObjects.Count; i++)
             {
-                Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 3, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point());
+                Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 4, 8, hierarchy, int.MaxValue, new OpenCVForUnity.Point());
 				//Imgproc.drawContours(frame, contours, i, theColorObjects[i].Color, 3);
-				Core.circle(frame, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos), (int)(Math.Sqrt(theColorObjects[i].Area)/2), theColorObjects[i].Color, 5);
+				Core.circle(frame, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos), (int)(Math.Sqrt(theColorObjects[i].Area)/2), theColorObjects[i].Color, 4);
 				//Core.putText(frame, theColorObjects[i].XPos + " , " + theColorObjects[i].YPos, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos + 20), 1, 1, theColorObjects[i].Color, 2);
-				Core.putText(frame, theColorObjects[i].ColorName + ": " + theColorObjects[i].Area, new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 40), 1, 2, theColorObjects[i].Color, 2);
+				Core.putText(frame, theColorObjects[i].ColorName + ": " + (int)(Math.Sqrt(theColorObjects[i].Area)), new OpenCVForUnity.Point(theColorObjects[i].XPos, theColorObjects[i].YPos - 40), 1, 2, theColorObjects[i].Color, 2);
             }
         }
 
-        void morphOps(Mat thresh)
+        void MorphOps(Mat thresh)
         {
 
             //create structuring element that will be used to "dilate" and "erode" image.
@@ -331,23 +327,17 @@ namespace OpenCVForUnitySample
             Imgproc.dilate(thresh, thresh, dilateElement);
         }
 
-        public Text txt;
 
-        void trackFilteredObject(ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
+        void TrackFilteredObject(ColorObject theColorObject, Mat threshold, Mat HSV, Mat cameraFeed)
         {
 			
             List<ColorObject> colorObjects = new List<ColorObject>();
             Mat temp = new Mat();
             threshold.copyTo(temp);
-            //these two vectors needed for output of findContours
             List<MatOfPoint> contours = new List<MatOfPoint>();
             Mat hierarchy = new Mat();
-            //find contours of filtered image using openCV findContours function
             
             Imgproc.findContours(temp, contours, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
-            	//Debug.LogWarning(contours[0].toList().Count);
-
-            //use moments method to find our filtered object
 
             bool colorObjectFound = false;
             if (hierarchy.rows() > 0)
@@ -387,7 +377,7 @@ namespace OpenCVForUnitySample
                     //if (colorObjectFound == true)
                     {
                         //draw object location on screen
-                        drawObject(colorObjects, cameraFeed, temp, contours, hierarchy);
+                        DrawObject(colorObjects, cameraFeed, temp, contours, hierarchy);
                     }
 
                 }

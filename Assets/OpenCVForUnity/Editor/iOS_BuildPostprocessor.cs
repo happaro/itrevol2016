@@ -18,7 +18,7 @@ public class iOS_BuildPostprocessor : MonoBehaviour
 			
 			string projPath = path + "/Unity-iPhone.xcodeproj/project.pbxproj";
 			
-			PBXProject proj = new PBXProject();
+			UnityEditor.iOS.Xcode.PBXProject proj = new UnityEditor.iOS.Xcode.PBXProject();
 			proj.ReadFromString(System.IO.File.ReadAllText(projPath));
 			
 			string target = proj.TargetGuidByName("Unity-iPhone");
