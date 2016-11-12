@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+﻿using System;
 using System.Collections;
-
-using OpenCVForUnity;
 using System.Collections.Generic;
-using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using OpenCVForUnity;
 
 namespace OpenCVForUnitySample
 {
     public class MultiObjectTrackingBasedOnColorSample : MonoBehaviour
     {
         const int MAX_NUM_OBJECTS = 2;
-        const int MIN_OBJECT_AREA = 70 * 70;
+        const int MIN_OBJECT_AREA = 100 * 100;
 
         public bool isRed, isGreen, isBlue, isYellow;
         public bool shouldUseFrontFacing = false;
@@ -31,6 +31,7 @@ namespace OpenCVForUnitySample
 
 		[Range(0, 256)]
 		public int min1, min2, min3, max1, max2, max3;
+		public bool debugColor = false;
 
         void Start()
         {
@@ -58,8 +59,6 @@ namespace OpenCVForUnitySample
                     webCamTexture = new WebCamTexture(webCamDevice.name, width, height);
                     break;
                 }
-
-
             }
 
             if (webCamTexture == null)
@@ -163,9 +162,11 @@ namespace OpenCVForUnitySample
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
-                initDone = !initDone;
-            if (!initDone)
+//            if (Input.GetKeyDown(KeyCode.Space) || Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+  //              initDone = !initDone;
+			if (Input.GetKeyDown (KeyCode.P))
+				isPause = !isPause;
+			if (!initDone)
                 return;
 
 
@@ -217,10 +218,12 @@ namespace OpenCVForUnitySample
                 }
 
 
-
+				if (Input.GetKey(KeyCode.Space) || Input.touchCount > 0)
+				{
+					
                 if (isYellow)
                 {
-					ColorObject yellow = new ColorObject("yellow", min1, min2, min3, max1, max2, max3);
+					ColorObject yellow = new ColorObject("yellow", min1, min2, min3, max1, max2, max3, debugColor);
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, yellow.HSVmin, yellow.HSVmax, thresholdMat);
@@ -230,7 +233,7 @@ namespace OpenCVForUnitySample
 
                 if (isRed)
                 {
-					ColorObject red = new ColorObject("red", min1, min2, min3, max1, max2, max3);
+					ColorObject red = new ColorObject("red", min1, min2, min3, max1, max2, max3, debugColor);
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, red.HSVmin, red.HSVmax, thresholdMat);
@@ -241,7 +244,7 @@ namespace OpenCVForUnitySample
                 if (isGreen)
                 {
 
-					ColorObject green = new ColorObject("green", min1, min2, min3, max1, max2, max3);
+					ColorObject green = new ColorObject("green", min1, min2, min3, max1, max2, max3, debugColor);
 
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, green.HSVmin, green.HSVmax, thresholdMat);
@@ -251,14 +254,14 @@ namespace OpenCVForUnitySample
 
                 if (isBlue)
                 {
-					ColorObject blue = new ColorObject("blue", min1, min2, min3, max1, max2, max3);
+					ColorObject blue = new ColorObject("blue", min1, min2, min3, max1, max2, max3, debugColor);
                     Imgproc.cvtColor(rgbMat, hsvMat, Imgproc.COLOR_RGB2HSV);
                     Core.inRange(hsvMat, blue.HSVmin, blue.HSVmax, thresholdMat);
                     morphOps(thresholdMat);
                     trackFilteredObject(blue, thresholdMat, hsvMat, rgbMat);
                 }
-                Utils.matToTexture2D(rgbMat, texture, colors);
-
+				}
+				Utils.matToTexture2D(rgbMat, texture, colors);
             }
         }
 
@@ -269,7 +272,7 @@ namespace OpenCVForUnitySample
 
         public void OnBackButton()
         {
-            Application.LoadLevel("Menu");
+			SceneManager.LoadScene ("Menu");
         }
 
         public void OnChangeCameraButton()
@@ -278,6 +281,7 @@ namespace OpenCVForUnitySample
             StartCoroutine(Init());
         }
 		public float MIN_MAX_DISTANCE = 100;
+		public bool isPause = false;
         void drawObject(List<ColorObject> theColorObjects, Mat frame, Mat temp, List<MatOfPoint> contours, Mat hierarchy)
         {
 
@@ -294,7 +298,7 @@ namespace OpenCVForUnitySample
 				}
 				if (tmpDist > MIN_MAX_DISTANCE) 
 				{
-					//isPause = true;
+					isPause = true;
 					txt.text = "ВАУ! ВЫ ПОЙМАЛИ ЖЕЛТУЮ ХУ*ТУ!!!";
 				}
 			}
