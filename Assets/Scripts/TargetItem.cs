@@ -29,6 +29,7 @@ public class TargetItem : MonoBehaviour
 		{
 			target = names[Random.Range(0, names.Length)];
 		}
+		GameObject.FindObjectOfType<MainController> ().AddPoint ();
         label.text = target;
         switch (target)
         {

@@ -9,11 +9,11 @@ using Holoville.HOTween;
 
 public class MainController : MonoBehaviour
 {
-    public TextMesh timerText, pointText;
+    public Text timerText, pointText;
     const int MAX_NUM_OBJECTS = 2;
     const int MIN_OBJECT_AREA = 100 * 100;
     public float timer = 300;
-    public float points = 0;
+	public int points = 0;
     bool isGameOver = false;
 	//DEBUG
 	[Range(0, 256)]
@@ -40,7 +40,7 @@ public class MainController : MonoBehaviour
 
 
 	public bool isScanning = false;
-
+	bool isFirst = true;
     void Start()
     {
 		target = GameObject.FindObjectOfType<TargetItem> ();
@@ -63,6 +63,28 @@ public class MainController : MonoBehaviour
 		foreach (var item in MaxItems)
 			MaxItems [item.Key].Area = 0;
 	}
+
+	public void AddPoint()
+	{
+
+		if (isFirst) 
+		{
+			isFirst = false;
+		} 
+		else 
+		{
+			points++;	
+			pointText.text = points.ToString ();
+
+		}
+	}
+
+
+	/*public IEnumerator IEBagPopUp()
+	{
+		HOTween.To (.rectTransform, 3, "localScale", new Vector3(0, Screen.height / 2f + 20, 0));	
+	}*/
+
 	public IEnumerator IEScan()
 	{
 		isScanning = true;
